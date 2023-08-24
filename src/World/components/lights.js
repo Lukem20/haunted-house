@@ -15,6 +15,14 @@ function createLights() {
     moonLight.castShadow = true;
     doorLight.castShadow = true;
 
+    moonLight.shadow.mapSize.width = 256;
+    moonLight.shadow.mapSize.height = 256;
+    moonLight.shadow.camera.far = 15;
+
+    doorLight.shadow.mapSize.width = 256;
+    doorLight.shadow.mapSize.height = 256;
+    doorLight.shadow.camera.far = 7;
+
     return { 
         moonLight, 
         ambientLight,

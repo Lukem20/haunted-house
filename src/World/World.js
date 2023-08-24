@@ -9,6 +9,7 @@ import { createDoor } from './components/door.js';
 import { createGraves } from './components/graves.js';
 import { createBushes } from './components/bushes.js';
 import { createGhosts } from './components/ghosts.js';
+import { createParticles } from './components/particles.js';
 
 // Systems
 import { createRenderer } from './systems/renderer.js';
@@ -55,10 +56,12 @@ class World {
         const graves = createGraves();
         const bushes = createBushes();
         const ghosts = createGhosts();
+        const particles = createParticles();
 
         ghosts.ghosts.children.forEach((ghost) => {
             loop.updatables.push(ghost);
         });
+        loop.updatables.push(particles);
 
         scene.add(
             moonLight,
@@ -71,6 +74,7 @@ class World {
             graves,
             bushes,
             ghosts.ghosts,
+            particles,
         );
 
         /* Controls */
