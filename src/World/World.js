@@ -1,96 +1,82 @@
 // Components
-import { createSphere } from './components/sphere.js';
-import { createCube } from './components/cube.js';
-import { createPlane } from './components/plane.js';
-import { createText } from './components/text.js';
-import { createShapes } from './components/shapes.js';
 import { createCamera } from './components/camera.js';
 import { createLights } from './components/lights.js';
 import { createScene } from './components/scene.js';
-// import { createEnvMap } from './components/envMap.js';
-// import { createMeshGroup } from './components/meshGroup.js';
-// import { Train } from './components/Train/Train.js';
-// import { loadBirds } from './components/Birds/birds.js';
-// Helpers
-// import { createGUI } from './components/lilgui.js'
-// import { createAxesHelper } from './components/helpers.js';
-// import { createGridHelper } from './components/helpers.js';
+import { createWalls } from './components/walls.js';
+import { createFloor } from './components/floor.js';
+import { createRoof } from './components/roof.js';
+import { createDoor } from './components/door.js';
+import { createGraves } from './components/graves.js';
+import { createBushes } from './components/bushes.js';
+import { createGhosts } from './components/ghosts.js';
+
 // Systems
-import { createControls } from './systems/controls.js';
 import { createRenderer } from './systems/renderer.js';
+import { createControls } from './systems/controls.js';
 import { Resizer } from './systems/Resizer.js';
-import { Loop } from './systems/Loop.js'
+import { Loop } from './systems/Loop.js';
+
+// Other
+import { ColorManagement, Fog } from 'three';
+import * as dat from 'lil-gui';
+
 
 let camera;
-let controls;
 let renderer;
 let scene;
 let loop;
 
 class World {
     constructor(container) {
+        /* Base scene */
         camera = createCamera();
         renderer = createRenderer();
-        controls = createControls(camera, renderer.domElement);
         scene = createScene();
         loop = new Loop(camera, scene, renderer);
         container.append(renderer.domElement);
 
+        /* Fog */
+        ColorManagement.enabled = false;
+        const fog = new Fog('#262837', 1, 15);
+        scene.fog = fog;
 
-        const sphere = createSphere();
-        const cube = createCube();
-        const plane = createPlane();
-        const text = createText(scene);
-        const shapes = createShapes();
+        /* Lights */
         const { 
-            directionalLight,
+            moonLight,
             ambientLight,
-            pointLight,
-            spotLight,
-            pointLightHelper,
-            spotLightHelper,
-            directionalLightCameraHelper,
+            doorLight
         } = createLights();
-        // const envMap = createEnvMap();
-        // const sphereMeshGroup = createMeshGroup();
-        // const train = new Train();
-        
-        
-        loop.updatables.push(sphere);
-        loop.updatables.push(cube);
-        loop.updatables.push(controls);
-        loop.updatables.push(shapes);
-        // loop.updatables.push(sphereMeshGroup);
-        // loop.updatables.push(train);
 
+        /* House */
+        const floor = createFloor();
+        const walls = createWalls();
+        const roof = createRoof();
+        const door = createDoor();
+        const graves = createGraves();
+        const bushes = createBushes();
+        const ghosts = createGhosts();
 
-        // const axesHelper = createAxesHelper();
-        // const gridHelper = createGridHelper();
-
-
-        controls.addEventListener('change', () => {
-            this.render();
+        ghosts.ghosts.children.forEach((ghost) => {
+            loop.updatables.push(ghost);
         });
 
-
         scene.add(
-            shapes,
-            directionalLight,
+            moonLight,
             ambientLight,
-            pointLight,
-            spotLight,
-            pointLightHelper,
-            spotLightHelper,
-            directionalLightCameraHelper,
-            sphere,
-            cube,
-            plane,
+            doorLight,
+            floor,
+            walls,
+            roof,
+            door,
+            graves,
+            bushes,
+            ghosts.ghosts,
         );
-        // scene.add(envMap, sphereMeshGroup, train);
-        // scene.add(axesHelper, gridHelper);
 
+        /* Controls */
+        const controls = createControls(camera, container)
 
-        //const gui = createGUI(ambientLight);        
+        /* Window resize */
         const resizer = new Resizer(container, camera, renderer);
     }
 

@@ -25,8 +25,7 @@ class Loop {
     }
 
     tick() {
-        const delta = clock.getDelta();
-
+        const delta = clock.getElapsedTime();
         for (const object of this.updatables) {
             object.tick(delta);
         }
