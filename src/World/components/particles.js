@@ -19,6 +19,7 @@ function createParticles() {
         depthWrite: false,
         blending: AdditiveBlending,
         vertexColors: true,
+        opacity: 0.25,
     });
 
 
