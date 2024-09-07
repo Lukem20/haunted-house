@@ -9,7 +9,6 @@ import { createDoor } from './components/door.js';
 import { createGraves } from './components/graves.js';
 import { createBushes } from './components/bushes.js';
 import { createGhosts } from './components/ghosts.js';
-import { createParticles } from './components/particles.js';
 
 // Systems
 import { createRenderer } from './systems/renderer.js';
@@ -18,9 +17,12 @@ import { Resizer } from './systems/Resizer.js';
 import { Loop } from './systems/Loop.js';
 
 // Other
-import { ColorManagement, Fog } from 'three';
-import * as dat from 'lil-gui';
-
+import { 
+    ColorManagement,
+    Fog,
+    Group,
+    TextureLoader,
+} from 'three';
 
 let camera;
 let renderer;
@@ -36,10 +38,12 @@ class World {
         loop = new Loop(camera, scene, renderer);
         container.append(renderer.domElement);
 
+        const textureLoader = new TextureLoader();
+
         /* Fog */
         ColorManagement.enabled = false;
         const fog = new Fog('#262837', 1, 15);
-        scene.fog = fog;
+        // scene.fog = fog;
 
         /* Lights */
         const { 
@@ -49,45 +53,42 @@ class World {
         } = createLights();
 
         /* House */
-        const floor = createFloor();
-        const walls = createWalls();
-        const roof = createRoof();
-        const door = createDoor();
-        const graves = createGraves();
-        const bushes = createBushes();
+        const floor = createFloor(textureLoader);
+        const walls = createWalls(textureLoader);
+        const roof = createRoof(textureLoader);
+        const door = createDoor(textureLoader);
+        const graves = createGraves(textureLoader);
+        const bushes = createBushes(textureLoader);
         const ghosts = createGhosts();
-        const particles = createParticles();
+
+        const house = new Group();
+        house.add(walls, roof, door);
 
         ghosts.ghosts.children.forEach((ghost) => {
             loop.updatables.push(ghost);
         });
-        loop.updatables.push(particles);
 
         scene.add(
             moonLight,
             ambientLight,
             doorLight,
             floor,
-            walls,
-            roof,
-            door,
+            house,
             graves,
             bushes,
             ghosts.ghosts,
-            particles,
         );
 
         /* Controls */
         const controls = createControls(camera, container)
+        loop.updatables.push(controls);
 
         /* Window resize */
         const resizer = new Resizer(container, camera, renderer);
     }
 
     async init() {
-        // const { parrot, flamingo, stork } = await loadBirds();
-        // scene.add(parrot, flamingo, stork);
-        // loop.updatables.push(parrot, flamingo, stork);
+
     }
 
     render() {

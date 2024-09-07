@@ -5,7 +5,7 @@ import {
 } from 'three';
 
 function createLights() {
-    const ambientLight = new AmbientLight('#b9d5ff', 0.12);
+    const ambientLight = new AmbientLight('#b9d5ff', 0.2);
     const moonLight = new DirectionalLight('#b9d5ff', 0.12);
     const doorLight = new PointLight('#ff7d46', 1, 7)
 

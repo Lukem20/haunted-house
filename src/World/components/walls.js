@@ -2,24 +2,41 @@ import {
     BoxGeometry, 
     MeshStandardMaterial, 
     Mesh,
-    TextureLoader,
+    RepeatWrapping,
 } from 'three';
 
-function createWalls () {
+function createWalls (textureLoader) {
     function createMaterial () {
-        // Create and texture loader and load the texture
-        const textureLoader = new TextureLoader();
-        const bricksColorTexture = textureLoader.load('/assets/textures/bricks/color.jpg');
-        const bricksNormalTexture = textureLoader.load('/assets/textures/bricks/normal.jpg');
-        const bricksRoughnessMap = textureLoader.load('/assets/textures/bricks/roughness.jpg');
-        const textureAmbientOcclusionMap = textureLoader.load('/assets/textures/bricks/ao.jpg');
+        const wallARMTexture = textureLoader.load('/assets/textures/walls/wall-arm.webp');
+        const wallNormalTexture = textureLoader.load('/assets/textures/walls/wall-normal.webp');
+        const wallColorTexture = textureLoader.load('/assets/textures/walls/wall-diff.webp');
+        const wallDispalcementTexture = textureLoader.load('/assets/textures/walls/wall-disp.webp');
 
+        wallColorTexture.repeat.set(3, 3);
+        wallARMTexture.repeat.set(3, 3);
+        wallNormalTexture.repeat.set(3, 3);
+        wallDispalcementTexture.repeat.set(3, 3);
+
+        wallColorTexture.wrapS = RepeatWrapping;
+        wallARMTexture.wrapS = RepeatWrapping;
+        wallNormalTexture.wrapS = RepeatWrapping;
+        wallDispalcementTexture.wrapS = RepeatWrapping;
+
+        wallColorTexture.wrapT = RepeatWrapping;
+        wallARMTexture.wrapT = RepeatWrapping;
+        wallNormalTexture.wrapT = RepeatWrapping;
+        wallDispalcementTexture.wrapT = RepeatWrapping;
+        
         // Create a material using the loaded texture as a color map.
         const material = new MeshStandardMaterial({ 
-            map: bricksColorTexture,
-            normalMap: bricksNormalTexture,
-            roughnessMap: bricksRoughnessMap,
-            aoMap: textureAmbientOcclusionMap,
+            map: wallColorTexture,
+            aoMap: wallARMTexture,
+            roughnessMap: wallARMTexture,
+            metalnessMap: wallARMTexture,
+            normalMap: wallNormalTexture,
+            displacementMap: wallDispalcementTexture,
+            displacementScale: 0.5,
+            displacementBias: -0.38,
         });
 
         return material;
