@@ -1,6 +1,6 @@
-import { Clock } from "three";
+import { Timer } from "three/addons/misc/Timer.js"
 
-const clock = new Clock();
+const timer = new Timer();
 
 class Loop {
     constructor(camera, scene, renderer) {
@@ -12,10 +12,8 @@ class Loop {
 
     start() {
         this.renderer.setAnimationLoop(() => {
-            // Tell every animated object to tick forward one frame
+            // Tell every animated object to tick forward one frame, then render
             this.tick();
-            
-            // Render a frame
             this.renderer.render(this.scene, this.camera);
         });
     }
@@ -25,7 +23,9 @@ class Loop {
     }
 
     tick() {
-        const delta = clock.getElapsedTime();
+        timer.update();
+        const delta = timer.getElapsed();
+
         for (const object of this.updatables) {
             object.tick(delta);
         }
