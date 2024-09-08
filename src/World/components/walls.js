@@ -47,6 +47,7 @@ function createWalls (textureLoader) {
     const walls = new Mesh(geometry, material);
     walls.position.y = 2.5 / 2;
     walls.castShadow = true;
+    walls.receiveShadow = true;
     
     return walls;
 }
