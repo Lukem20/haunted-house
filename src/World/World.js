@@ -9,6 +9,7 @@ import { createDoor } from './components/door.js';
 import { createGraves } from './components/graves.js';
 import { createBushes } from './components/bushes.js';
 import { createGhosts } from './components/ghosts.js';
+import { createSky } from './components/sky.js';
 
 // Systems
 import { createRenderer } from './systems/renderer.js';
@@ -19,7 +20,7 @@ import { Loop } from './systems/Loop.js';
 // Other
 import { 
     ColorManagement,
-    Fog,
+    FogExp2,
     Group,
     TextureLoader,
 } from 'three';
@@ -42,8 +43,7 @@ class World {
 
         /* Fog */
         ColorManagement.enabled = false;
-        const fog = new Fog('#262837', 1, 15);
-        // scene.fog = fog;
+        scene.fog = new FogExp2('#04343f', 0.1);
 
         /* Lights */
         const { 
@@ -60,6 +60,7 @@ class World {
         const graves = createGraves(textureLoader);
         const bushes = createBushes(textureLoader);
         const ghosts = createGhosts();
+        const sky = createSky();
 
         const house = new Group();
         house.add(walls, roof, door);
@@ -77,6 +78,7 @@ class World {
             graves,
             bushes,
             ghosts.ghosts,
+            sky,
         );
 
         /* Controls */
